@@ -1,0 +1,17 @@
+{
+    "name": "greeter-bot",
+    "version": "1.0.0",
+    "description": "My own Discord bot",
+    "main": "bot.js",
+    "author": "EckoStone",
+    "dependencies": {
+        "axios": "^0.18.0",
+        "discord.io": "https://github.com/woor/discord.io/tarball/gateway_v6",
+        "discord.js": "^11.4.2",
+        "winston": "^3.1.0"
+    },
+    "devDependencies": {
+        "babel-preset-env": "^1.7.0",
+        "babel-register": "^6.26.0"
+    }
+}
