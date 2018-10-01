@@ -48,7 +48,6 @@ bot.on('message', function (user, userID, channelID, message, evt) {
                             message: `Hi ${user}! ` + res,
                         });
                     });
-
                 break;
         };
     }
