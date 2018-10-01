@@ -1,7 +1,7 @@
 const Discord = require('discord.io');
 const logger = require('winston');
 const auth = require('./auth.json');
-import fetchPlayerInfo from './api';
+import * as API from './api';
 
 // Configure logger settings
 logger.remove(logger.transports.Console);
@@ -41,16 +41,15 @@ bot.on('message', function (user, userID, channelID, message, evt) {
                 break;
             case 'dota':
                 const accountId = args[1];
-                fetchPlayerInfo(accountId)
+                API.fetchPlayerLastMatchStats(accountId)
                     .then(res => {
-                        const lastMatch = res.data[0];
-
                         bot.sendMessage({
                             to: channelID,
-                            message: `Hi ${user}! In your last match, you had ${lastMatch.kills} kills, ${lastMatch.deaths} deaths, and ${lastMatch.assists} assists.`,
+                            message: `Hi ${user}! ` + res,
                         });
                     });
+
                 break;
-        }
+        };
     }
 });
