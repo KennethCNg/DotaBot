@@ -40,7 +40,7 @@ bot.on('message', function (user, userID, channelID, message, evt) {
                 });
                 break;
             case 'dota':
-                const accountId = args[1];
+                const accountId = args[0];
                 API.fetchPlayerLastMatchStats(accountId)
                     .then(res => {
                         bot.sendMessage({
