@@ -44,6 +44,9 @@ bot.on('message', function (user, userID, channelID, message, evt) {
                 break;
             case 'dota':
                 let dir = `./accounts/${name}.json`;
+                /* looks for the file first. If there is no file,
+                it returns an err, else it'll make the request to API.fetchPlayerLastMatchStats
+                */
                 fs.readFile(dir, "utf8", (err, data) => {
                     if (err) {
                         bot.sendMessage({
@@ -53,10 +56,10 @@ bot.on('message', function (user, userID, channelID, message, evt) {
                     } else {
                         const steamId = JSON.parse(data)["steam_id"];
                         API.fetchPlayerLastMatchStats(steamId)
-                            .then(res => {
+                            .then(resMsg => {
                                 bot.sendMessage({
                                     to: channelID,
-                                    message: `${name}! ` + res,
+                                    message: `${name}! ` + resMsg,
                                 });
                             });
                     }

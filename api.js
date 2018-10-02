@@ -15,6 +15,8 @@ const getHeroes = () => {
 export const fetchPlayerLastMatchStats = accountId => {
     return axios.all([getPlayerInfo(accountId), getHeroes()]).then(
         axios.spread((matches, heroes) => {
+            /* matches.data is an array of the players matches 
+            heroes.data is an array of heroes */
             const lastMatch = matches.data[0];
             const heroName = find(
                 heroes.data,
