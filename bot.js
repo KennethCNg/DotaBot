@@ -1,7 +1,6 @@
 const Discord = require('discord.io');
 const logger = require('winston');
 const auth = require('./auth.json');
-const fsu = require('fsu');
 const fs = require('fs');
 import capitalize from "lodash/capitalize";
 import * as API from './api';
@@ -34,7 +33,7 @@ bot.on('message', function (user, userID, channelID, message, evt) {
         var cmd = args[0];
 
         args = args.splice(1);
-        const name = args[0];
+        const name = capitalize(args[0]);
         switch (cmd) {
             // !ping
             case 'ping':
@@ -46,26 +45,33 @@ bot.on('message', function (user, userID, channelID, message, evt) {
             case 'dota':
                 let dir = `./accounts/${name}.json`;
                 fs.readFile(dir, "utf8", (err, data) => {
-                    const steamId = JSON.parse(data)["steam_id"];
-                    API.fetchPlayerLastMatchStats(steamId)
-                        .then(res => {
-                            bot.sendMessage({
-                                to: channelID,
-                                message: `${capitalize(name)}! ` + res,
-                            });
+                    if (err) {
+                        bot.sendMessage({
+                            to: channelID,
+                            message: `The name ${name} has not been set yet! Type '!dotaset [your_name] [your_steam32_id]' to tether your name to your steam account.`,
                         });
-                });
+                    } else {
+                        const steamId = JSON.parse(data)["steam_id"];
+                        API.fetchPlayerLastMatchStats(steamId)
+                            .then(res => {
+                                bot.sendMessage({
+                                    to: channelID,
+                                    message: `${name}! ` + res,
+                                });
+                            });
+                    }
 
+                })
                 break;
             case 'dotaset':
                 const steamId = args[1];
                 const data = {
                     "steam_id": steamId
                 }
-                fsu.writeFileUnique(`./accounts/${name}.json`, JSON.stringify(data), (err, res) => {
+                fs.writeFile(`./accounts/${name}.json`, JSON.stringify(data), (err, res) => {
                     bot.sendMessage({
                         to: channelID,
-                        message: `Your ${name} has been tied to ${steamId}!`,
+                        message: `${name} has been tied to ${steamId}!`,
                     });
                 });
                 break;
