@@ -5,7 +5,7 @@ import find from "lodash/find";
 const BASE_URL = `https://api.opendota.com/api/`;
 
 const getPlayerInfo = (accountId = 91368232) => {
-    return axios.get(BASE_URL + `players/` + accountId.toString() + `/matches?`);
+    return axios.get(BASE_URL + `players/` + accountId.toString() + `/recentMatches`);
 };
 
 const getHeroes = () => {
@@ -17,15 +17,17 @@ export const fetchPlayerLastMatchStats = accountId => {
         axios.spread((matches, heroes) => {
             /* matches.data is an array of the players matches 
             heroes.data is an array of heroes */
+            if (matches.data.length === 0) {
+                return `You have no registered matches`;
+            }
             const lastMatch = matches.data[0];
+            console.log(lastMatch);
             const heroName = find(
                 heroes.data,
                 heroObj => heroObj.id === lastMatch.hero_id
             ).localized_name;
 
-            return `In your last match you played ${heroName}. You had ${
-        lastMatch.kills
-      } kills, ${lastMatch.deaths} deaths, and ${lastMatch.assists} assists.`;
+            return `In match #${lastMatch.match_id} ,you played ${heroName}. You had ${lastMatch.kills} kills, ${lastMatch.deaths} deaths, and ${lastMatch.assists} assists. Find out more about the match by typing in !dotamatch [match_id]. `;
         })
     );
 };
