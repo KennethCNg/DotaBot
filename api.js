@@ -1,15 +1,19 @@
 // import dotaToken from './dotaToken';
 import axios from "axios";
 import find from "lodash/find";
+import {
+    giphyToken
+} from "./giphyToken";
 
-const BASE_URL = `https://api.opendota.com/api/`;
+const GIPHY_BASE_URL = `https://api.giphy.com/v1/gifs/search?q=`;
+const DOTA_BASE_URL = `https://api.opendota.com/api/`;
 
 const getPlayerInfo = (accountId = 91368232) => {
-    return axios.get(BASE_URL + `players/` + accountId.toString() + `/matches?`);
+    return axios.get(DOTA_BASE_URL + `players/` + accountId.toString() + `/matches?`);
 };
 
 const getHeroes = () => {
-    return axios.get(BASE_URL + `heroes`);
+    return axios.get(DOTA_BASE_URL + `heroes`);
 };
 
 export const fetchPlayerLastMatchStats = accountId => {
@@ -28,4 +32,9 @@ export const fetchPlayerLastMatchStats = accountId => {
     );
 };
 
+export const fetchGif = queryTerm => {
+    const url = GIPHY_BASE_URL + queryTerm + `&api_key=${giphyToken}`;
+    return axios.get(url);
+
+}
 // my steam 32 player Id: 91368232

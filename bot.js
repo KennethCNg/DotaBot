@@ -1,80 +1,89 @@
-const Discord = require('discord.io');
-const logger = require('winston');
-const auth = require('./auth.json');
-const fs = require('fs');
+import {
+    Client
+} from "discord.js";
+const auth = require("./auth.json");
+const fs = require("fs");
 import capitalize from "lodash/capitalize";
-import * as API from './api';
+import {
+    fetchPlayerLastMatchStats,
+    fetchGif
+} from "./api";
 
+const bot = new Client();
+bot.login(auth.token);
 
-// Configure logger settings
-logger.remove(logger.transports.Console);
-logger.add(new logger.transports.Console, {
-    colorize: true
-});
-logger.level = 'debug';
-// Initialize Discord Bot
-var bot = new Discord.Client({
-    token: auth.token,
-    autorun: true
+bot.on("ready", () => {
+    console.log(`Logged in as ${bot.user.tag}!`);
 });
 
-/* Signals that the library has connected successfully to Discord, received and sorted all immediate data, and is now ready to be interacted with. */
-bot.on('ready', function (evt) {
-    logger.info('Connected');
-    logger.info('Logged in as: ');
-    logger.info(bot.username + ' - (' + bot.id + ')');
-});
-
-bot.on('message', function (user, userID, channelID, message, evt) {
+bot.on("message", message => {
     // Our bot needs to know if it will execute a command
     // It will listen for messages that will start with `!`
-    if (message.substring(0, 1) == '!') {
-        var args = message.substring(1).split(' ');
-        var cmd = args[0];
+    // console.log('message: ', message.content);
+    if (message.content.substring(0, 1) == "!") {
+        let args = message.content.substring(1).split(" ");
+        const cmd = args[0];
 
         args = args.splice(1);
         const name = capitalize(args[0]);
         switch (cmd) {
             // !ping
-            case 'ping':
-                bot.sendMessage({
-                    to: channelID,
-                    message: 'Pong!'
-                });
+            case "ping":
+                message.reply("Pong!");
                 break;
-            case 'dota':
+            case "testGif":
+                const attachment = 'https://giphy.com/gifs/QGzPdYCcBbbZm';
+                // Send the attachment in the message channel
+                message.channel.send(attachment);
+                message.channel.send("it works!");
+                break;
+            case "meme":
+                const queryTerm = args.join("+");
+                let msg = null;
+                fetchGif(queryTerm).then(res => {
+                    const gifArr = res.data.data;
+                    if (res.data.data.length > 0) {
+                        msg = getGifUrl(gifArr).url;
+                    } else {
+                        msg = `Nice try dumbass, there's no gif for that.`;
+                    }
+                    message.reply(msg);
+                });
+
+                function getGifUrl(gifArr) {
+                    return gifArr[0];
+                    // return gifArr[Math.floor(Math.random() * gifArr.length - 1)];
+                };
+                break
+            case "dota":
                 let dir = `./accounts/${name}.json`;
                 fs.readFile(dir, "utf8", (err, data) => {
                     if (err) {
-                        bot.sendMessage({
-                            to: channelID,
-                            message: `The name ${name} has not been set yet! Type '!dotaset [your_name] [your_steam32_id]' to tether your name to your steam account.`,
-                        });
+                        message.reply(
+                            `The name ${name} has not been set yet! Type '!dotaset [your_name] [your_steam32_id]' to tether your name to your steam account.`
+                        );
                     } else {
                         const steamId = JSON.parse(data)["steam_id"];
-                        API.fetchPlayerLastMatchStats(steamId)
-                            .then(res => {
-                                bot.sendMessage({
-                                    to: channelID,
-                                    message: `${name}! ` + res,
-                                });
-                            });
+                        console.log('YOYOYOYOYOYOYOY');
+                        fetchPlayerLastMatchStats(steamId).then(res => {
+                            message.reply(`${name}! ` + res);
+                        });
                     }
-
-                })
-                break;
-            case 'dotaset':
-                const steamId = args[1];
-                const data = {
-                    "steam_id": steamId
-                }
-                fs.writeFile(`./accounts/${name}.json`, JSON.stringify(data), (err, res) => {
-                    bot.sendMessage({
-                        to: channelID,
-                        message: `${name} has been tied to ${steamId}!`,
-                    });
                 });
                 break;
-        };
+            case "dotaset":
+                const steamId = args[1];
+                const data = {
+                    steam_id: steamId
+                };
+                fs.writeFile(
+                    `./accounts/${name}.json`,
+                    JSON.stringify(data),
+                    (err, res) => {
+                        message.reply(`${name} has been tied to ${steamId}!`);
+                    }
+                );
+                break;
+        }
     }
 });
