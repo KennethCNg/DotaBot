@@ -27,9 +27,8 @@ bot.on("message", message => {
         args = args.splice(1);
         const name = capitalize(args[0]);
         switch (cmd) {
-            // !ping
-            case "ping":
-                message.reply("Pong!");
+            case 'ping':
+                message.reply('Pong!');
                 break;
             case "testGif":
                 const attachment = 'https://giphy.com/gifs/QGzPdYCcBbbZm';
