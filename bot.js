@@ -37,7 +37,7 @@ bot.on("message", message => {
                 message.channel.send(attachment);
                 message.channel.send("it works!");
                 break;
-            case "meme":
+            case "gif":
                 const queryTerm = args.join("+");
                 let msg = null;
                 fetchGif(queryTerm).then(res => {
