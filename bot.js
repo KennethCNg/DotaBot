@@ -50,7 +50,7 @@ bot.on("message", message => {
                 });
 
                 function getGifUrl(gifArr) {
-                    return gifArr[Math.floor(Math.random() * gifArr.length - 1)].url;
+                    return gifArr[Math.floor(Math.random() * gifArr.length)].url;
                 };
                 break
             case "dota":

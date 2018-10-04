@@ -4,7 +4,7 @@ import find from "lodash/find";
 import {
     giphyToken
 } from "./giphyToken";
-/v1/gifs / random
+
 const GIPHY_BASE_URL = `https://api.giphy.com/v1/gifs/search?q=`;
 const DOTA_BASE_URL = `https://api.opendota.com/api/`;
 
