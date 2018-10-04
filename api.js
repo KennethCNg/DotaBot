@@ -33,8 +33,10 @@ export const fetchPlayerLastMatchStats = accountId => {
 };
 
 export const fetchGif = queryTerm => {
-    const url = GIPHY_BASE_URL + queryTerm + `&api_key=${giphyToken}`;
+
+    const url = GIPHY_BASE_URL + queryTerm + `&api_key=${giphyToken}` + `&limit=5`;
     return axios.get(url);
 
 }
+
 // my steam 32 player Id: 91368232
