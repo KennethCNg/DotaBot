@@ -42,7 +42,7 @@ bot.on("message", message => {
                 fetchGif(queryTerm).then(res => {
                     const gifArr = res.data.data;
                     if (res.data.data.length > 0) {
-                        msg = getGifUrl(gifArr).url;
+                        msg = getGifUrl(gifArr);
                     } else {
                         msg = `Nice try dumbass, there's no gif for that.`;
                     }
@@ -50,8 +50,7 @@ bot.on("message", message => {
                 });
 
                 function getGifUrl(gifArr) {
-                    return gifArr[0];
-                    // return gifArr[Math.floor(Math.random() * gifArr.length - 1)];
+                    return gifArr[Math.floor(Math.random() * gifArr.length - 1)].url;
                 };
                 break
             case "dota":
