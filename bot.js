@@ -42,7 +42,8 @@ bot.on("message", message => {
                 fetchGif(queryTerm).then(res => {
                     const gifArr = res.data.data;
                     if (res.data.data) {
-                        msg = getGifUrl(gifArr);
+                        msg = res.data.data.url;
+                        // msg = getGifUrl(gifArr);
                     } else {
                         msg = `Nice try dumbass, there's no gif for that.`;
                     }
