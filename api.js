@@ -7,6 +7,7 @@ import {
 
 const GIPHY_BASE_URL = `https://api.giphy.com/v1/gifs/translate?s=`;
 const DOTA_BASE_URL = `https://api.opendota.com/api/`;
+let url;
 
 const getPlayerInfo = (accountId = 91368232) => {
     return axios.get(DOTA_BASE_URL + `players/` + accountId.toString() + `/matches?`);
@@ -33,10 +34,14 @@ export const fetchPlayerLastMatchStats = accountId => {
 };
 
 export const fetchGif = queryTerm => {
-
-    const url = GIPHY_BASE_URL + queryTerm + `&api_key=${giphyToken}` + `&limit=5`;
+    url = GIPHY_BASE_URL + queryTerm + `&api_key=${giphyToken}` + `&limit=5`;
     return axios.get(url);
 
+}
+
+export const fetchHoroscope = sign => {
+    url = `http://horoscope-api.herokuapp.com/horoscope/today/${sign}`
+    return axios.get(url);
 }
 
 // my steam 32 player Id: 91368232

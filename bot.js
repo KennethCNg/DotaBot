@@ -4,10 +4,7 @@ import {
 const auth = require("./auth.json");
 const fs = require("fs");
 import capitalize from "lodash/capitalize";
-import {
-    fetchPlayerLastMatchStats,
-    fetchGif
-} from "./api";
+import * as API from "./api";
 
 const bot = new Client();
 bot.login(auth.token);
@@ -39,8 +36,8 @@ bot.on("message", message => {
             case "gif":
                 const queryTerm = args.join("+");
                 let msg = null;
-                fetchGif(queryTerm).then(res => {
-                    const gifArr = res.data.data;
+                API.fetchGif(queryTerm).then(res => {
+                    // const gifArr = res.data.data;
                     if (res.data.data) {
                         msg = res.data.data.url;
                         // msg = getGifUrl(gifArr);
@@ -54,6 +51,12 @@ bot.on("message", message => {
                 //     return gifArr[Math.floor(Math.random() * gifArr.length)].url;
                 // };
                 break
+            case "oracle":
+                const sign = capitalize(args[0]);
+                API.fetchHoroscope(sign).then(res => {
+                    message.reply(res.data.horoscope);
+                });
+                break
             case "dota":
                 let dir = `./accounts/${name}.json`;
                 fs.readFile(dir, "utf8", (err, data) => {
@@ -63,7 +66,7 @@ bot.on("message", message => {
                         );
                     } else {
                         const steamId = JSON.parse(data)["steam_id"];
-                        fetchPlayerLastMatchStats(steamId).then(res => {
+                        API.fetchPlayerLastMatchStats(steamId).then(res => {
                             message.reply(`${name}! ` + res);
                         });
                     }
