@@ -5,7 +5,7 @@ import {
     giphyToken
 } from "./giphyToken";
 
-const GIPHY_BASE_URL = `https://api.giphy.com/v1/gifs/search?q=`;
+const GIPHY_BASE_URL = `https://api.giphy.com/v1/gifs/translate?s=`;
 const DOTA_BASE_URL = `https://api.opendota.com/api/`;
 
 const getPlayerInfo = (accountId = 91368232) => {

@@ -41,7 +41,7 @@ bot.on("message", message => {
                 let msg = null;
                 fetchGif(queryTerm).then(res => {
                     const gifArr = res.data.data;
-                    if (res.data.data.length > 0) {
+                    if (res.data.data) {
                         msg = getGifUrl(gifArr);
                     } else {
                         msg = `Nice try dumbass, there's no gif for that.`;
@@ -49,9 +49,9 @@ bot.on("message", message => {
                     message.reply(msg);
                 });
 
-                function getGifUrl(gifArr) {
-                    return gifArr[Math.floor(Math.random() * gifArr.length)].url;
-                };
+                // function getGifUrl(gifArr) {
+                //     return gifArr[Math.floor(Math.random() * gifArr.length)].url;
+                // };
                 break
             case "dota":
                 let dir = `./accounts/${name}.json`;
@@ -62,7 +62,6 @@ bot.on("message", message => {
                         );
                     } else {
                         const steamId = JSON.parse(data)["steam_id"];
-                        console.log('YOYOYOYOYOYOYOY');
                         fetchPlayerLastMatchStats(steamId).then(res => {
                             message.reply(`${name}! ` + res);
                         });
